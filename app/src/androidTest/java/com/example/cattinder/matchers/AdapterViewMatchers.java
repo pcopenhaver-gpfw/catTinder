@@ -46,13 +46,8 @@ public class AdapterViewMatchers {
    * Like {@link #withAdapter()} but adds the additional
    * criteria that the attached adapter has a specific item count.
    */
-  public static Matcher<View> hasNumItems(final int itemCount) {
-    return withAdapter(new Predicate<Adapter>(){
-      @Override
-      public boolean apply(Adapter adapter) {
-        return adapter.getCount() == itemCount;
-      }
-    });
+  public static Matcher<View> hasNumItems(int itemCount) {
+    return withAdapter(adapter -> adapter.getCount() == itemCount);
   }
 
   /**
@@ -60,12 +55,7 @@ public class AdapterViewMatchers {
    * and that it has an adapter that contains at least one item.
    */
   public static Matcher<View> withAdaptedData() {
-    return withAdapter(new Predicate<Adapter>(){
-      @Override
-      public boolean apply(Adapter adapter) {
-        return adapter.getCount() > 0;
-      }
-    });
+    return withAdapter(adapter -> adapter.getCount() > 0);
   }
 
   /**
@@ -73,15 +63,10 @@ public class AdapterViewMatchers {
    * and that it has an adapter attached to it.
    */
   public static Matcher<View> withAdapter() {
-    return withAdapter(new Predicate<Adapter>(){
-      @Override
-      public boolean apply(Adapter adapter) {
-        return true;
-      }
-    });
+    return withAdapter(adapter -> true);
   }
 
-  static Matcher<View> withAdapter(final Predicate<Adapter> predicate) {
+  static Matcher<View> withAdapter(Predicate<Adapter> predicate) {
     return new TypeSafeMatcher<View>() {
 
       @Override public boolean matchesSafely(View view) {

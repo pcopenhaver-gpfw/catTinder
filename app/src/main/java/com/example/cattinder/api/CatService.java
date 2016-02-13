@@ -3,7 +3,6 @@ package com.example.cattinder.api;
 import com.example.cattinder.data.CatServiceResponse;
 import com.example.cattinder.rx.SchedulerFactory;
 
-import retrofit.RestAdapter;
 import retrofit.http.GET;
 import retrofit.http.Query;
 import rx.Observable;
@@ -19,34 +18,7 @@ import rx.Observable;
  * https://www.googleapis.com/customsearch/v1?key=AIzaSyAZmvW6DecHAvtLCiqYQzmhKCNnsOYxtgo&cx=005351716643766109453:uusxxukdams&q=cat&searchType=image
  */
 public interface CatService {
-
-  String BASE_URL = "https://www.googleapis.com";
-
-  class RestClient {
-
-    private final CatService service;
-
-    public static RestClient createService() {
-      return new RestClient();
-    }
-
-    private RestClient() {
-      super();
-
-      RestAdapter.Builder builder = new RestAdapter.Builder()
-              .setEndpoint(BASE_URL);
-
-      RestAdapter restAdapter = builder.build();
-      this.service = restAdapter.create(CatService.class);
-    }
-
-    public CatService getService() {
-      return this.service;
-    }
-  }
-
-
-
+  public static final String BASE_URL = "https://www.googleapis.com/";
   @GET("/customsearch/v1?key=AIzaSyAZmvW6DecHAvtLCiqYQzmhKCNnsOYxtgo&cx=005351716643766109453" +
     ":uusxxukdams&searchType=image&q=cat")
   CatServiceResponse getCats(@Query("start") int startIndex);

@@ -1,12 +1,13 @@
 apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
-//    compileOptions {
-//        sourceCompatibility JavaVersion.VERSION_1_8
-//        targetCompatibility JavaVersion.VERSION_1_8
-//    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     defaultConfig {
         applicationId 'com.example.cattinder'
         minSdkVersion 21
@@ -51,11 +52,12 @@ dependencies {
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     // Butterknife
-    compile 'com.jakewharton:butterknife:7.0.1'
+    //compile 'com.jakewharton:butterknife:7.0.1'
     // Swipe Cards UI Lib
     compile 'com.lorentzos.swipecards:library:1.0.8@aar'
     // RX - JAVA
     compile 'io.reactivex:rxjava:1.1.0'
     compile 'io.reactivex:rxandroid:1.1.0'
-    compile 'org.jetbrains:annotations:13.0'
+    compile 'io.realm:realm-android:0.87.4'
+
 }

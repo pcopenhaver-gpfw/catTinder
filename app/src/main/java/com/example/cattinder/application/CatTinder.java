@@ -5,6 +5,9 @@ import com.example.cattinder.util.Logger.AndroidTree;
 
 import android.app.Application;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+
 public class CatTinder extends Application {
 
     @Override
@@ -16,5 +19,8 @@ public class CatTinder extends Application {
          * via Android's logger.
          */
         Logger.plant(new AndroidTree());
+        RealmConfiguration config = new RealmConfiguration.Builder(this).build();
+        Realm.setDefaultConfiguration(config);
+
     }
 }
