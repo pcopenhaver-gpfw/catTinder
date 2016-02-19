@@ -12,22 +12,26 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 
 public class MainFragment extends Fragment{
 
     private static final int INITIAL_CAT_INDEX = 1;
     private static final String KEY_NEXT_CAT = "NextCat";
 
+    // Injectables
     private CatService mCatService;
+    private CatSwipeAdapter mCatAdapter;
+    private SwipeFlingAdapterView.onFlingListener mFlingListener;
+
+
     private SwipeFlingAdapterView mSwipeFlingAdapterView;
+    private List<CatServiceResponse.Cat> mCatList;
 
     private int nextCatIndex = INITIAL_CAT_INDEX;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,8 +47,11 @@ public class MainFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_hotornot, null);
-        mSwipeFlingAdapterView = (SwipeFlingAdapterView)view.findViewById(R.id.kittyStack);
-        
+
+        this.mSwipeFlingAdapterView = (SwipeFlingAdapterView)view.findViewById(R.id.kittyStack);
+        this.mSwipeFlingAdapterView.setFlingListener(this.mFlingListener);
+        this.mSwipeFlingAdapterView.setAdapter(this.mCatAdapter);
+
         return view;
     }
 
@@ -52,6 +59,9 @@ public class MainFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
+
+        this.mCatList = new ArrayList<>();
+        this.mCatAdapter.setData(mCatList);
 
         getMoreCats();
     }
@@ -81,8 +91,7 @@ public class MainFragment extends Fragment{
             @Override
             protected void onPostExecute(List<CatServiceResponse.Cat> cats) {
 
-                // TODO - Add cats to adapter
-
+                MainFragment.this.mCatAdapter.addData(cats);
             }
 
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -91,58 +100,20 @@ public class MainFragment extends Fragment{
 
 
     protected void inject() {
-        mCatService = CatService.RestClient.createService().getService();
+        this.mCatService = CatService.RestClient.createService().getService();
+        this.mCatAdapter = new CatSwipeAdapter(this.getActivity());
+        this.mFlingListener = new SwipeFlingListener();
     }
 
 
 
     // https://github.com/Diolor/Swipecards
-
-    private class CatSwipeAdapter extends BaseAdapter implements SwipeFlingAdapterView.onFlingListener {
-
-        private List<CatServiceResponse.Cat> mData = new ArrayList<>();
-
-        public void addData(List<CatServiceResponse.Cat> newData) {
-            mData.addAll(newData);
-            notifyDataSetChanged();
-        }
-
-        @Override
-        public int getCount() {
-            return mData.size();
-        }
-
-        @Override
-        public CatServiceResponse.Cat getItem(int position) {
-            if(position < 0
-                    || position >= mData.size()) {
-                return null;
-            }
-            return mData.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            return null;
-        }
-
-        @Override
-        public void onScroll(float v) {
-
-        }
-
-
-
+    private class SwipeFlingListener implements SwipeFlingAdapterView.onFlingListener {
 
         @Override
         public void removeFirstObjectInAdapter() {
-            mData.remove(0);
-            this.notifyDataSetChanged();
+            mCatList.remove(0);
+            MainFragment.this.mCatAdapter.notifyDataSetChanged();
         }
 
         @Override
@@ -158,6 +129,11 @@ public class MainFragment extends Fragment{
         @Override
         public void onAdapterAboutToEmpty(int i) {
             getMoreCats();
+        }
+
+        @Override
+        public void onScroll(float v) {
+
         }
     }
 }
