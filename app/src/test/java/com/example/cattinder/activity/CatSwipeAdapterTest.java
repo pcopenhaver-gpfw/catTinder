@@ -1,5 +1,6 @@
 package com.example.cattinder.activity;
 
+import com.example.cattinder.activity.fragment.TestCatSwipeAdapter;
 import com.example.cattinder.activity.view.CatCardView;
 import com.example.cattinder.activity.fragment.CatSwipeAdapter;
 import com.example.cattinder.data.CatServiceResponse;
@@ -115,7 +116,7 @@ public class CatSwipeAdapterTest extends RobolectricTest {
 
 
     private CatSwipeAdapter prepareAdapter(List<CatServiceResponse.Cat> cats) {
-        CatSwipeAdapter adapter = new CatSwipeAdapter(getApplicationContext());
+        CatSwipeAdapter adapter = new TestCatSwipeAdapter(getApplicationContext());
         adapter.setData(cats);
         return adapter;
     }

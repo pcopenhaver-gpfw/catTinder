@@ -53,7 +53,7 @@ public class CatSwipeAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         CatCardView catCardView = (CatCardView)convertView;
         if (catCardView == null)
-            catCardView = new CatCardView(this.mContext);
+            catCardView = createCatCardView(this.mContext);
 
         catCardView.setCat(getItem(position));
 
@@ -64,5 +64,10 @@ public class CatSwipeAdapter extends BaseAdapter {
     public void addData(List<CatServiceResponse.Cat> newData) {
         this.mData.addAll(newData);
         notifyDataSetChanged();
+    }
+
+
+    CatCardView createCatCardView(Context context) {
+        return new CatCardView(context);
     }
 }
