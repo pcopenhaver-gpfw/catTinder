@@ -1,7 +1,6 @@
 package com.example.cattinder.activity.view;
 
 import com.example.cattinder.data.CatServiceResponse;
-import com.example.test.MockPicasso;
 import com.example.test.RobolectricTest;
 
 import junit.framework.Assert;
@@ -9,11 +8,8 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
-
-import rx.exceptions.OnErrorNotImplementedException;
 
 import static org.assertj.android.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
