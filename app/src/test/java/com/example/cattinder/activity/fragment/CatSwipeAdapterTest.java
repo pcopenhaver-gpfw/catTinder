@@ -2,12 +2,15 @@ package com.example.cattinder.activity.fragment;
 
 import com.example.cattinder.activity.view.CatCardView;
 import com.example.cattinder.data.CatServiceResponse;
+import com.example.test.MockPicasso;
 import com.example.test.RobolectricTest;
+import com.squareup.picasso.Picasso;
 
 import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,12 +24,14 @@ public class CatSwipeAdapterTest extends RobolectricTest {
 
     private List<CatServiceResponse.Cat> mTestCats;
     private CatSwipeAdapter mCatSwipeAdapter;
+    private Picasso mPicasso;
 
 
     @Before
     public void setup() {
         this.mTestCats = getTestCats();
-        mCatSwipeAdapter = prepareAdapter(this.mTestCats);
+        this.mPicasso = MockPicasso.create();
+        this.mCatSwipeAdapter = prepareAdapter(this.mTestCats, this.mPicasso);
     }
 
 
@@ -110,8 +115,8 @@ public class CatSwipeAdapterTest extends RobolectricTest {
 
 
 
-    private CatSwipeAdapter prepareAdapter(List<CatServiceResponse.Cat> cats) {
-        CatSwipeAdapter adapter = new TestCatSwipeAdapter(getApplicationContext());
+    private CatSwipeAdapter prepareAdapter(List<CatServiceResponse.Cat> cats, Picasso picasso) {
+        CatSwipeAdapter adapter = new CatSwipeAdapter(getApplicationContext(), picasso);
         adapter.setData(cats);
         return adapter;
     }

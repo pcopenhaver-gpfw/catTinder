@@ -2,6 +2,7 @@ package com.example.cattinder.activity.fragment;
 
 import com.example.cattinder.activity.view.CatCardView;
 import com.example.cattinder.data.CatServiceResponse;
+import com.squareup.picasso.Picasso;
 
 import android.content.Context;
 import android.view.View;
@@ -16,10 +17,12 @@ public class CatSwipeAdapter extends BaseAdapter {
 
     private Context mContext;
     private List<CatServiceResponse.Cat> mData;
+    private Picasso mPicasso;
 
 
-    public CatSwipeAdapter(Context context) {
+    public CatSwipeAdapter(Context context, Picasso picasso) {
         this.mContext = context;
+        this.mPicasso = picasso;
     }
 
 
@@ -68,6 +71,6 @@ public class CatSwipeAdapter extends BaseAdapter {
 
 
     CatCardView createCatCardView(Context context) {
-        return new CatCardView(context);
+        return new CatCardView(context, this.mPicasso);
     }
 }

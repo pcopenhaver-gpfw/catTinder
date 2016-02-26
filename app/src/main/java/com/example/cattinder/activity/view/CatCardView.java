@@ -28,18 +28,13 @@ public class CatCardView extends FrameLayout {
     Picasso mPicasso;
 
 
-    public CatCardView(Context context) {
+    public CatCardView(Context context, Picasso picasso) {
         super(context);
 
         inflate(context, R.layout.kitty_cat, this);
         ButterKnife.bind(this);
 
-        inject();
-    }
-
-
-    void inject() {
-        this.mPicasso = Picasso.with(getContext());
+        this.mPicasso = picasso;
     }
 
 

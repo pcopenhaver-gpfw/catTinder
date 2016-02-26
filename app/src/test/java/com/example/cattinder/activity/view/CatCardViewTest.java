@@ -1,7 +1,9 @@
 package com.example.cattinder.activity.view;
 
 import com.example.cattinder.data.CatServiceResponse;
+import com.example.test.MockPicasso;
 import com.example.test.RobolectricTest;
+import com.squareup.picasso.Picasso;
 
 import junit.framework.Assert;
 
@@ -20,11 +22,16 @@ import static org.mockito.Mockito.verify;
 public class CatCardViewTest extends RobolectricTest {
 
     private CatServiceResponse.Cat mTestCat;
+    private Picasso mPicasso;
+    private CatCardView mCatCardView;
 
 
     @Before
     public void setup() {
         this.mTestCat = getTestCat();
+        this.mPicasso = MockPicasso.create();
+        this.mCatCardView = new CatCardView(getApplicationContext(), mPicasso);
+        mCatCardView.setCat(this.mTestCat);
     }
 
 
@@ -33,11 +40,9 @@ public class CatCardViewTest extends RobolectricTest {
     public void testViewReturnsProperCat() {
 
         // Given
-        TestCatCardView catCardView = new TestCatCardView(getApplicationContext());
-        catCardView.setCat(this.mTestCat);
 
         // When
-        CatServiceResponse.Cat returnedCat = catCardView.getCat();
+        CatServiceResponse.Cat returnedCat = mCatCardView.getCat();
 
         // Then
         Assert.assertEquals(returnedCat, this.mTestCat);
@@ -48,11 +53,9 @@ public class CatCardViewTest extends RobolectricTest {
     public void testCatNameGoesIntoTextView() {
 
         // Given
-        TestCatCardView catCardView = new TestCatCardView(getApplicationContext());
 
         // When
-        catCardView.setCat(this.mTestCat);
-        TextView textView = catCardView.mCatName;
+        TextView textView = mCatCardView.mCatName;
 
         // Then
         assertThat(textView).hasText(this.mTestCat.getDescription());
@@ -63,14 +66,12 @@ public class CatCardViewTest extends RobolectricTest {
     public void testCatUrlGoesIntoImageView() {
 
         // Given
-        TestCatCardView catCardView = new TestCatCardView(getApplicationContext());
 
         // When
-        catCardView.setCat(this.mTestCat);
 
 
         // Then
-        verify(catCardView.mPicasso).load(this.mTestCat.getImageUri());
+        verify(this.mPicasso).load(this.mTestCat.getImageUri());
     }
 
 
@@ -78,10 +79,9 @@ public class CatCardViewTest extends RobolectricTest {
     public void testThrowsIllegalArgumentExceptionOnNullCat() {
 
         // Given
-        TestCatCardView catCardView = new TestCatCardView(getApplicationContext());
 
         // When
-        catCardView.setCat(null);
+        this.mCatCardView.setCat(null);
     }
 
 
@@ -89,13 +89,12 @@ public class CatCardViewTest extends RobolectricTest {
     public void testLikeSetsAlphaValues() {
 
         // Given
-        TestCatCardView catCardView = new TestCatCardView(getApplicationContext());
-        View likeView = catCardView.mYesView;
-        View dislikeView = catCardView.mNoView;
+        View likeView = this.mCatCardView.mYesView;
+        View dislikeView = this.mCatCardView.mNoView;
 
         // When
-        catCardView.setCat(this.mTestCat);
-        catCardView.likeCat(.5f);
+        this.mCatCardView.setCat(this.mTestCat);
+        this.mCatCardView.likeCat(.5f);
 
         // Then
         assertThat(likeView).hasAlpha(.5f);
@@ -107,13 +106,12 @@ public class CatCardViewTest extends RobolectricTest {
     public void testDislikeSetsAlphaValues() {
 
         // Given
-        TestCatCardView catCardView = new TestCatCardView(getApplicationContext());
-        View likeView = catCardView.mYesView;
-        View dislikeView = catCardView.mNoView;
+        View likeView = this.mCatCardView.mYesView;
+        View dislikeView = this.mCatCardView.mNoView;
 
         // When
-        catCardView.setCat(this.mTestCat);
-        catCardView.dislikeCat(.5f);
+        this.mCatCardView.setCat(this.mTestCat);
+        this.mCatCardView.dislikeCat(.5f);
 
         // Then
         assertThat(likeView).hasAlpha(0f);
@@ -125,11 +123,9 @@ public class CatCardViewTest extends RobolectricTest {
     public void testThrowsExceptionWhenLikePercentageOutOfRangeLow() {
 
         // Given
-        TestCatCardView catCardView = new TestCatCardView(getApplicationContext());
 
         // When
-        catCardView.setCat(this.mTestCat);
-        catCardView.likeCat(-.1f);
+        this.mCatCardView.likeCat(-.1f);
     }
 
 
@@ -137,11 +133,9 @@ public class CatCardViewTest extends RobolectricTest {
     public void testThrowsExceptionWhenLikePercentageOutOfRangeHigh() {
 
         // Given
-        TestCatCardView catCardView = new TestCatCardView(getApplicationContext());
 
         // When
-        catCardView.setCat(this.mTestCat);
-        catCardView.likeCat(1.1f);
+        this.mCatCardView.likeCat(1.1f);
     }
 
 
@@ -149,11 +143,9 @@ public class CatCardViewTest extends RobolectricTest {
     public void testThrowsExceptionWhenDiskikePercentageOutOfRangeLow() {
 
         // Given
-        TestCatCardView catCardView = new TestCatCardView(getApplicationContext());
 
         // When
-        catCardView.setCat(this.mTestCat);
-        catCardView.dislikeCat(-.1f);
+        this.mCatCardView.dislikeCat(-.1f);
     }
 
 
@@ -161,19 +153,13 @@ public class CatCardViewTest extends RobolectricTest {
     public void testThrowsExceptionWhenDisikePercentageOutOfRangeHigh() {
 
         // Given
-        TestCatCardView catCardView = new TestCatCardView(getApplicationContext());
 
         // When
-        catCardView.setCat(this.mTestCat);
-        catCardView.dislikeCat(1.1f);
+        this.mCatCardView.dislikeCat(1.1f);
     }
 
 
     private CatServiceResponse.Cat getTestCat() {
         return new CatServiceResponse.Cat("http://www.dummylink1.com", "Snippet1");
     }
-
-
-
-
 }

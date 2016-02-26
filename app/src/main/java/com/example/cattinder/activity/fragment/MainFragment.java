@@ -4,6 +4,7 @@ import com.example.cattinder.R;
 import com.example.cattinder.api.CatService;
 import com.example.cattinder.data.CatServiceResponse;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
+import com.squareup.picasso.Picasso;
 
 import android.app.Fragment;
 import android.os.AsyncTask;
@@ -101,7 +102,7 @@ public class MainFragment extends Fragment{
 
     protected void inject() {
         this.mCatService = CatService.RestClient.createService().getService();
-        this.mCatAdapter = new CatSwipeAdapter(this.getActivity());
+        this.mCatAdapter = new CatSwipeAdapter(this.getActivity(), Picasso.with(getActivity()));
         this.mFlingListener = new SwipeFlingListener();
     }
 
