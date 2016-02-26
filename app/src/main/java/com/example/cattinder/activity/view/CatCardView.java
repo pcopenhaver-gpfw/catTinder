@@ -23,11 +23,13 @@ public class CatCardView extends View{
     private View mNoView;
     private View mYesView;
 
-    private Picasso mPicasso;
+    protected Picasso mPicasso;
 
 
     public CatCardView(Context context) {
         super(context);
+
+        inject();
     }
 
 
@@ -47,6 +49,21 @@ public class CatCardView extends View{
     }
 
 
+    public void showYes() {
+
+    }
+
+
+    public void showNo() {
+
+    }
+
+
+    public void hideYesAndNo() {
+
+    }
+
+
     private void referenceWidgets() {
         this.mCatImage = (ImageView)findViewById(R.id.image);
         this.mCatName = (TextView)findViewById(R.id.snippet);
@@ -57,6 +74,7 @@ public class CatCardView extends View{
 
 
     private void configureViewForCat() {
+        this.mCatName.setText(this.mCat.getDescription());
         this.mPicasso.load(this.mCat.getImageUri()).into(this.mCatImage);
     }
 }
