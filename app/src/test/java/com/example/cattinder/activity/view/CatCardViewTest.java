@@ -8,6 +8,10 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import android.widget.TextView;
+
+import static org.assertj.android.api.Assertions.assertThat;
+
 /**
  * Created by doddy on 2/19/16.
  */
@@ -46,10 +50,10 @@ public class CatCardViewTest extends RobolectricTest {
         catCardView.setCat(this.mTestCat);
 
         // When
-        CatServiceResponse.Cat returnedCat = catCardView.getCat();
+        TextView textView = catCardView.mCatName;
 
         // Then
-        Assert.assertEquals(returnedCat, this.mTestCat);
+        assertThat(textView).hasText(this.mTestCat.getDescription());
     }
 
 
@@ -61,7 +65,7 @@ public class CatCardViewTest extends RobolectricTest {
         catCardView.setCat(this.mTestCat);
 
         // When
-        CatServiceResponse.Cat returnedCat = catCardView.getCat();
+        ImageView
 
         // Then
         Assert.assertEquals(returnedCat, this.mTestCat);

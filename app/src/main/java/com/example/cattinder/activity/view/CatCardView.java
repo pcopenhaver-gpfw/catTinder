@@ -17,15 +17,22 @@ public class CatCardView extends View{
 
     private CatServiceResponse.Cat mCat;
 
-    private ImageView mCatImage;
-    private TextView mCatName;
+    ImageView mCatImage;
+    TextView mCatName;
 
     private View mNoView;
     private View mYesView;
 
+    private Picasso mPicasso;
+
 
     public CatCardView(Context context) {
         super(context);
+    }
+
+
+    void inject() {
+        this.mPicasso = Picasso.with(getContext());
     }
 
 
@@ -50,6 +57,6 @@ public class CatCardView extends View{
 
 
     private void configureViewForCat() {
-        Picasso.with(getContext()).cancelRequest(this.mCatImage);
+        this.mPicasso.load(this.mCat.getImageUri()).into(this.mCatImage);
     }
 }
