@@ -50,9 +50,9 @@ public class CatCardViewTest extends RobolectricTest {
 
         // Given
         CatCardView catCardView = new CatCardView(getApplicationContext());
-        catCardView.setCat(this.mTestCat);
 
         // When
+        catCardView.setCat(this.mTestCat);
         TextView textView = catCardView.mCatName;
 
         // Then
@@ -65,13 +65,13 @@ public class CatCardViewTest extends RobolectricTest {
 
         // Given
         TestCatCardView catCardView = new TestCatCardView(getApplicationContext());
-        catCardView.setCat(this.mTestCat);
 
         // When
+        catCardView.setCat(this.mTestCat);
 
 
         // Then
-        verify()
+        verify(catCardView.mPicasso).load(this.mTestCat.getImageUri());
     }
 
 

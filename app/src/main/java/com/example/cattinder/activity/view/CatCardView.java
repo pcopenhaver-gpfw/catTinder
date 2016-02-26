@@ -23,7 +23,7 @@ public class CatCardView extends View{
     private View mNoView;
     private View mYesView;
 
-    protected Picasso mPicasso;
+    Picasso mPicasso;
 
 
     public CatCardView(Context context) {
@@ -49,17 +49,12 @@ public class CatCardView extends View{
     }
 
 
-    public void likeCat() {
+    public void likeCat(double percentage) {
 
     }
 
 
-    public void dislikeCat() {
-
-    }
-
-
-    public void hideIndicators() {
+    public void dislikeCat(double percentage) {
 
     }
 
