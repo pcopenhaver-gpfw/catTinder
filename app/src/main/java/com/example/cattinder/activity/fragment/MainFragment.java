@@ -1,6 +1,7 @@
 package com.example.cattinder.activity.fragment;
 
 import com.example.cattinder.R;
+import com.example.cattinder.activity.view.CatCardView;
 import com.example.cattinder.api.CatService;
 import com.example.cattinder.data.CatServiceResponse;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
@@ -14,33 +15,38 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainFragment extends Fragment{
+public class MainFragment extends Fragment implements ICatRequester{
 
     private static final int INITIAL_CAT_INDEX = 1;
     private static final String KEY_NEXT_CAT = "NextCat";
 
     // Injectables
-    private CatService mCatService;
     private CatSwipeAdapter mCatAdapter;
     private SwipeFlingAdapterView.onFlingListener mFlingListener;
-
-
     private SwipeFlingAdapterView mSwipeFlingAdapterView;
     private List<CatServiceResponse.Cat> mCatList;
+    private CatFetchTaskFactory mCatFetchTaskFactory;
 
     private int nextCatIndex = INITIAL_CAT_INDEX;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         this.nextCatIndex = savedInstanceState.getInt(KEY_NEXT_CAT, INITIAL_CAT_INDEX);
 
         inject();
+    }
+
+    protected void inject() {
+        CatService catService = CatService.RestClient.createService().getService();
+        mCatFetchTaskFactory = new CatFetchTaskFactory(catService);
+        mCatAdapter = new CatSwipeAdapter(this.getActivity(), Picasso.with(getActivity()));
+        mCatList = new ArrayList<>();
+        mFlingListener = new SwipeFlingListener(mCatList, mCatAdapter, mSwipeFlingAdapterView, this);
     }
 
     @Nullable
@@ -56,17 +62,13 @@ public class MainFragment extends Fragment{
         return view;
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
 
-        this.mCatList = new ArrayList<>();
         this.mCatAdapter.setData(mCatList);
-
         getMoreCats();
     }
-
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -75,46 +77,82 @@ public class MainFragment extends Fragment{
         outState.putInt(KEY_NEXT_CAT, this.nextCatIndex);
     }
 
-
-    private void getMoreCats() {
-        new AsyncTask<Void, Void, List<CatServiceResponse.Cat>>() {
-
-            @Override
-            protected List<CatServiceResponse.Cat> doInBackground(Void... params) {
-
-                CatServiceResponse response = MainFragment.this.mCatService.getCats(MainFragment.this.nextCatIndex);
-                List<CatServiceResponse.Cat> cats = response.getCats();
-                MainFragment.this.nextCatIndex += cats.size();
-                return cats;
-            }
-
-
-            @Override
-            protected void onPostExecute(List<CatServiceResponse.Cat> cats) {
-
-                MainFragment.this.mCatAdapter.addData(cats);
-            }
-
-        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    public void getMoreCats() {
+        mCatFetchTaskFactory.getCatFetchTask(new ICatFetchCallback(){
+                                                 @Override
+                                                 public void onFetched(List<CatServiceResponse.Cat> list, int index) {
+                                                     mCatList = list;
+                                                     mCatAdapter.notifyDataSetChanged();
+                                                     nextCatIndex = index;
+                                                 }
+                                             },
+                                             nextCatIndex)
+                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    static class CatFetchTaskFactory {
 
+        private CatService mCatService;
 
-    protected void inject() {
-        this.mCatService = CatService.RestClient.createService().getService();
-        this.mCatAdapter = new CatSwipeAdapter(this.getActivity(), Picasso.with(getActivity()));
-        this.mFlingListener = new SwipeFlingListener();
+        CatFetchTaskFactory(CatService catService) {
+            mCatService = catService;
+        }
+
+        CatFetchTask getCatFetchTask(ICatFetchCallback callback, int initialIndex) {
+            return new CatFetchTask(mCatService, callback, initialIndex);
+        }
     }
 
+    interface ICatFetchCallback {
+        void onFetched(List<CatServiceResponse.Cat> list, int index);
+    }
 
+    static class CatFetchTask extends AsyncTask<Void, Void, List<CatServiceResponse.Cat>> {
+
+        private CatService mCatService;
+        private int mIndex;
+        private ICatFetchCallback mCallback;
+
+        CatFetchTask(CatService catService, ICatFetchCallback callback, int initialIndex) {
+            mCatService = catService;
+            mIndex = initialIndex;
+            mCallback = callback;
+        }
+
+
+        @Override
+        protected List<CatServiceResponse.Cat> doInBackground(Void... params) {
+            CatServiceResponse response = mCatService.getCats(mIndex);
+            List<CatServiceResponse.Cat> cats = response.getCats();
+            mIndex += cats.size();
+            return cats;
+        }
+
+        @Override
+        protected void onPostExecute(List<CatServiceResponse.Cat> cats) {
+            mCallback.onFetched(cats, mIndex);
+        }
+    }
 
     // https://github.com/Diolor/Swipecards
-    private class SwipeFlingListener implements SwipeFlingAdapterView.onFlingListener {
+    static class SwipeFlingListener implements SwipeFlingAdapterView.onFlingListener {
+
+        private List<CatServiceResponse.Cat> mCatList;
+        private CatSwipeAdapter mCatAdapter;
+        private SwipeFlingAdapterView mAdapterView;
+        private WeakReference<ICatRequester> mCatRequestor;
+
+        SwipeFlingListener(List<CatServiceResponse.Cat> catList, CatSwipeAdapter catAdapter, SwipeFlingAdapterView adapterView, ICatRequester catRequestor) {
+            mCatList = catList;
+            mCatAdapter = catAdapter;
+            mAdapterView = adapterView;
+            mCatRequestor = new WeakReference<>(catRequestor);
+        }
 
         @Override
         public void removeFirstObjectInAdapter() {
             mCatList.remove(0);
-            MainFragment.this.mCatAdapter.notifyDataSetChanged();
+            mCatAdapter.notifyDataSetChanged();
         }
 
         @Override
@@ -129,12 +167,20 @@ public class MainFragment extends Fragment{
 
         @Override
         public void onAdapterAboutToEmpty(int i) {
-            getMoreCats();
+            ICatRequester catRequestor = mCatRequestor.get();
+            if(catRequestor != null) {
+                catRequestor.getMoreCats();
+            }
         }
 
         @Override
         public void onScroll(float v) {
-
+            if(v > 0) {
+                ((CatCardView)mAdapterView.getSelectedView()).likeCat(v);
+            }
+            else if(v < 0) {
+                ((CatCardView)mAdapterView.getSelectedView()).dislikeCat(v);
+            }
         }
     }
 }
