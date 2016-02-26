@@ -38,8 +38,6 @@ public class CatCardView extends FrameLayout {
     }
 
 
-
-
     void inject() {
         this.mPicasso = Picasso.with(getContext());
     }

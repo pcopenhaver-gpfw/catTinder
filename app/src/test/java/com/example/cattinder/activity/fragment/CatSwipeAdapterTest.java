@@ -1,4 +1,4 @@
-package com.example.cattinder.activity;
+package com.example.cattinder.activity.fragment;
 
 import com.example.cattinder.activity.fragment.TestCatSwipeAdapter;
 import com.example.cattinder.activity.view.CatCardView;
