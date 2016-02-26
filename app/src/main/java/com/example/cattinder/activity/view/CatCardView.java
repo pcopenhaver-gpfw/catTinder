@@ -49,17 +49,17 @@ public class CatCardView extends View{
     }
 
 
-    public void showYes() {
+    public void likeCat() {
 
     }
 
 
-    public void showNo() {
+    public void dislikeCat() {
 
     }
 
 
-    public void hideYesAndNo() {
+    public void hideIndicators() {
 
     }
 
