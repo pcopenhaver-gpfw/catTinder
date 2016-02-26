@@ -49,12 +49,12 @@ public class CatCardView extends View{
     }
 
 
-    public void likeCat(double percentage) {
+    public void likeCat(float percentage) {
 
     }
 
 
-    public void dislikeCat(double percentage) {
+    public void dislikeCat(float percentage) {
 
     }
 
