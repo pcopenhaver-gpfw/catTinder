@@ -1,6 +1,5 @@
-package com.example.cattinder.activity;
+package com.example.cattinder.activity.view;
 
-import com.example.cattinder.activity.fragment.CatCardView;
 import com.example.cattinder.data.CatServiceResponse;
 import com.example.test.RobolectricTest;
 
@@ -37,6 +36,37 @@ public class CatCardViewTest extends RobolectricTest {
         // Then
         Assert.assertEquals(returnedCat, this.mTestCat);
     }
+
+
+    @Test
+    public void testCatNameGoesIntoTextView() {
+
+        // Given
+        CatCardView catCardView = new CatCardView(getApplicationContext());
+        catCardView.setCat(this.mTestCat);
+
+        // When
+        CatServiceResponse.Cat returnedCat = catCardView.getCat();
+
+        // Then
+        Assert.assertEquals(returnedCat, this.mTestCat);
+    }
+
+
+    @Test
+    public void testCatUrlGoesIntoImageView() {
+
+        // Given
+        CatCardView catCardView = new CatCardView(getApplicationContext());
+        catCardView.setCat(this.mTestCat);
+
+        // When
+        CatServiceResponse.Cat returnedCat = catCardView.getCat();
+
+        // Then
+        Assert.assertEquals(returnedCat, this.mTestCat);
+    }
+
 
     private CatServiceResponse.Cat getTestCat() {
         return new CatServiceResponse.Cat("http://www.dummylink1.com", "Snippet1");

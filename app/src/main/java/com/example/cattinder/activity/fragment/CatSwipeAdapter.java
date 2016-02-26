@@ -1,5 +1,6 @@
 package com.example.cattinder.activity.fragment;
 
+import com.example.cattinder.activity.view.CatCardView;
 import com.example.cattinder.data.CatServiceResponse;
 
 import android.content.Context;

@@ -1,4 +1,4 @@
-package com.example.cattinder.activity.fragment;
+package com.example.cattinder.activity.view;
 
 import com.example.cattinder.R;
 import com.example.cattinder.data.CatServiceResponse;
@@ -31,7 +31,6 @@ public class CatCardView extends View{
 
     public void setCat(CatServiceResponse.Cat cat) {
         this.mCat = cat;
-
         configureViewForCat();
     }
 

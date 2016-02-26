@@ -1,6 +1,6 @@
 package com.example.cattinder.activity;
 
-import com.example.cattinder.activity.fragment.CatCardView;
+import com.example.cattinder.activity.view.CatCardView;
 import com.example.cattinder.activity.fragment.CatSwipeAdapter;
 import com.example.cattinder.data.CatServiceResponse;
 import com.example.test.RobolectricTest;
