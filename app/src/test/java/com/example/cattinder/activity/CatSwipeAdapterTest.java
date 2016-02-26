@@ -85,10 +85,10 @@ public class CatSwipeAdapterTest extends RobolectricTest {
 
         // Given
         CatSwipeAdapter catSwipeAdapter = prepareAdapter(this.mTestCats);
-        int expectedId = 2;
+        long expectedId = 2;
 
         // When
-        int returnedId = 2;
+        long returnedId = catSwipeAdapter.getItemId(2);
 
         // Then
         Assert.assertEquals(returnedId, expectedId);
