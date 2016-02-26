@@ -1,7 +1,6 @@
 package com.example.cattinder.activity.view;
 
 import com.example.cattinder.data.CatServiceResponse;
-import com.example.test.MockPicasso;
 import com.example.test.RobolectricTest;
 
 import junit.framework.Assert;
@@ -9,7 +8,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import android.content.Context;
+import android.view.View;
 import android.widget.TextView;
 
 import static org.assertj.android.api.Assertions.assertThat;
@@ -34,7 +33,7 @@ public class CatCardViewTest extends RobolectricTest {
     public void testViewReturnsProperCat() {
 
         // Given
-        CatCardView catCardView = new CatCardView(getApplicationContext());
+        TestCatCardView catCardView = new TestCatCardView(getApplicationContext());
         catCardView.setCat(this.mTestCat);
 
         // When
@@ -49,7 +48,7 @@ public class CatCardViewTest extends RobolectricTest {
     public void testCatNameGoesIntoTextView() {
 
         // Given
-        CatCardView catCardView = new CatCardView(getApplicationContext());
+        TestCatCardView catCardView = new TestCatCardView(getApplicationContext());
 
         // When
         catCardView.setCat(this.mTestCat);
@@ -75,6 +74,101 @@ public class CatCardViewTest extends RobolectricTest {
     }
 
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testThrowsIllegalArgumentExceptionOnNullCat() {
+
+        // Given
+        TestCatCardView catCardView = new TestCatCardView(getApplicationContext());
+
+        // When
+        catCardView.setCat(null);
+    }
+
+
+    @Test
+    public void testLikeSetsAlphaValues() {
+
+        // Given
+        TestCatCardView catCardView = new TestCatCardView(getApplicationContext());
+        View likeView = catCardView.mYesView;
+        View dislikeView = catCardView.mNoView;
+
+        // When
+        catCardView.setCat(this.mTestCat);
+        catCardView.likeCat(.5f);
+
+        // Then
+        assertThat(likeView).hasAlpha(.5f);
+        assertThat(dislikeView).hasAlpha(0f);
+    }
+
+
+    @Test
+    public void testDislikeSetsAlphaValues() {
+
+        // Given
+        TestCatCardView catCardView = new TestCatCardView(getApplicationContext());
+        View likeView = catCardView.mYesView;
+        View dislikeView = catCardView.mNoView;
+
+        // When
+        catCardView.setCat(this.mTestCat);
+        catCardView.dislikeCat(.5f);
+
+        // Then
+        assertThat(likeView).hasAlpha(0f);
+        assertThat(dislikeView).hasAlpha(.5f);
+    }
+
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testThrowsExceptionWhenLikePercentageOutOfRangeLow() {
+
+        // Given
+        TestCatCardView catCardView = new TestCatCardView(getApplicationContext());
+
+        // When
+        catCardView.setCat(this.mTestCat);
+        catCardView.likeCat(-.1f);
+    }
+
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testThrowsExceptionWhenLikePercentageOutOfRangeHigh() {
+
+        // Given
+        TestCatCardView catCardView = new TestCatCardView(getApplicationContext());
+
+        // When
+        catCardView.setCat(this.mTestCat);
+        catCardView.likeCat(1.1f);
+    }
+
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testThrowsExceptionWhenDiskikePercentageOutOfRangeLow() {
+
+        // Given
+        TestCatCardView catCardView = new TestCatCardView(getApplicationContext());
+
+        // When
+        catCardView.setCat(this.mTestCat);
+        catCardView.dislikeCat(-.1f);
+    }
+
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testThrowsExceptionWhenDisikePercentageOutOfRangeHigh() {
+
+        // Given
+        TestCatCardView catCardView = new TestCatCardView(getApplicationContext());
+
+        // When
+        catCardView.setCat(this.mTestCat);
+        catCardView.dislikeCat(1.1f);
+    }
+
+
     private CatServiceResponse.Cat getTestCat() {
         return new CatServiceResponse.Cat("http://www.dummylink1.com", "Snippet1");
     }
@@ -82,16 +176,4 @@ public class CatCardViewTest extends RobolectricTest {
 
 
 
-    private static class TestCatCardView extends CatCardView {
-
-        public TestCatCardView(Context context) {
-            super(context);
-        }
-
-
-        @Override
-        void inject() {
-            this.mPicasso = MockPicasso.create();
-        }
-    }
 }

@@ -1,7 +1,6 @@
-package com.example.cattinder.activity;
+package com.example.cattinder.activity.fragment;
 
 import com.example.cattinder.activity.view.CatCardView;
-import com.example.cattinder.activity.fragment.CatSwipeAdapter;
 import com.example.cattinder.data.CatServiceResponse;
 import com.example.test.RobolectricTest;
 
@@ -21,11 +20,13 @@ import static org.assertj.android.api.Assertions.assertThat;
 public class CatSwipeAdapterTest extends RobolectricTest {
 
     private List<CatServiceResponse.Cat> mTestCats;
+    private CatSwipeAdapter mCatSwipeAdapter;
 
 
     @Before
     public void setup() {
         this.mTestCats = getTestCats();
+        mCatSwipeAdapter = prepareAdapter(this.mTestCats);
     }
 
 
@@ -34,13 +35,12 @@ public class CatSwipeAdapterTest extends RobolectricTest {
     public void testAdapterReturnsCorrectCount() {
 
         // Given
-        CatSwipeAdapter catSwipeAdapter = prepareAdapter(this.mTestCats);
         int expectedCount = this.mTestCats.size();
 
         // When
 
         // Then
-        assertThat(catSwipeAdapter).hasCount(expectedCount);
+        assertThat(mCatSwipeAdapter).hasCount(expectedCount);
     }
 
 
@@ -48,13 +48,12 @@ public class CatSwipeAdapterTest extends RobolectricTest {
     public void testAdapterGetsCorrectItem() {
 
         // Given
-        CatSwipeAdapter catSwipeAdapter = prepareAdapter(this.mTestCats);
         CatServiceResponse.Cat expectedCat = this.mTestCats.get(2);
 
         // When
 
         // Then
-        assertThat(catSwipeAdapter).hasItem(expectedCat, 2);
+        assertThat(mCatSwipeAdapter).hasItem(expectedCat, 2);
     }
 
 
@@ -62,10 +61,9 @@ public class CatSwipeAdapterTest extends RobolectricTest {
     public void testAdapterThrowsExceptionOnRequestBelowBounds() {
 
         // Given
-        CatSwipeAdapter catSwipeAdapter = prepareAdapter(this.mTestCats);
 
         // When
-        catSwipeAdapter.getItem(-1);
+        mCatSwipeAdapter.getItem(-1);
     }
 
 
@@ -73,10 +71,10 @@ public class CatSwipeAdapterTest extends RobolectricTest {
     public void testAdapterThrowsExceptionOnRequestAboveBounds() {
 
         // Given
-        CatSwipeAdapter catSwipeAdapter = prepareAdapter(this.mTestCats);
+
 
         // When
-        catSwipeAdapter.getItem(this.mTestCats.size());
+        mCatSwipeAdapter.getItem(this.mTestCats.size());
     }
 
 
@@ -84,11 +82,10 @@ public class CatSwipeAdapterTest extends RobolectricTest {
     public void testAdapterReturnCorrectItemId() {
 
         // Given
-        CatSwipeAdapter catSwipeAdapter = prepareAdapter(this.mTestCats);
         long expectedId = 2;
 
         // When
-        long returnedId = catSwipeAdapter.getItemId(2);
+        long returnedId = mCatSwipeAdapter.getItemId(2);
 
         // Then
         Assert.assertEquals(returnedId, expectedId);
@@ -99,11 +96,10 @@ public class CatSwipeAdapterTest extends RobolectricTest {
     public void testAdapterReturnsCorrectView() {
 
         // Given
-        CatSwipeAdapter catSwipeAdapter = prepareAdapter(this.mTestCats);
         CatServiceResponse.Cat expectedCat = this.mTestCats.get(2);
 
         // When
-        CatCardView returnedView = (CatCardView)catSwipeAdapter.getView(2, null, null);
+        CatCardView returnedView = (CatCardView)mCatSwipeAdapter.getView(2, null, null);
         CatServiceResponse.Cat returnedCat = returnedView.getCat();
 
 
@@ -115,7 +111,7 @@ public class CatSwipeAdapterTest extends RobolectricTest {
 
 
     private CatSwipeAdapter prepareAdapter(List<CatServiceResponse.Cat> cats) {
-        CatSwipeAdapter adapter = new CatSwipeAdapter(getApplicationContext());
+        CatSwipeAdapter adapter = new TestCatSwipeAdapter(getApplicationContext());
         adapter.setData(cats);
         return adapter;
     }
