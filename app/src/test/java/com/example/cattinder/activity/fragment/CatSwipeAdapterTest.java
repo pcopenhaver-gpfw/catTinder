@@ -98,7 +98,7 @@ public class CatSwipeAdapterTest extends RobolectricTest {
 
 
     @Test
-    public void testAdapterReturnsCorrectView() {
+    public void testAdapterReturnsViewRepresentingCorrectCat() {
 
         // Given
         CatServiceResponse.Cat expectedCat = this.mTestCats.get(2);
