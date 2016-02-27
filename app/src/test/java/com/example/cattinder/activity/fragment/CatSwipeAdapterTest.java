@@ -113,6 +113,28 @@ public class CatSwipeAdapterTest extends RobolectricTest {
     }
 
 
+    @Test
+    public void testAdapterRecyclesExistingViewWithNewCat() {
+
+        // Given
+        CatServiceResponse.Cat originalCat = this.mTestCats.get(1);
+        CatServiceResponse.Cat expectedCat = this.mTestCats.get(2);
+
+        CatCardView originalView = new CatCardView(getApplicationContext(), this.mPicasso);
+        originalView.setCat(originalCat);
+
+
+        // When
+        CatCardView returnedView = (CatCardView)mCatSwipeAdapter.getView(2, originalView, null);
+        CatServiceResponse.Cat returnedCat = returnedView.getCat();
+
+
+        // Then
+        Assert.assertEquals(originalView, returnedView);
+        Assert.assertEquals(returnedCat, expectedCat);
+    }
+
+
 
 
     private CatSwipeAdapter prepareAdapter(List<CatServiceResponse.Cat> cats, Picasso picasso) {
