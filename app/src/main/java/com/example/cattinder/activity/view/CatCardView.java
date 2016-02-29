@@ -76,5 +76,7 @@ public class CatCardView extends FrameLayout {
     private void configureViewForCat() {
         this.mCatName.setText(this.mCat.getDescription());
         this.mPicasso.load(this.mCat.getImageUri()).into(this.mCatImage);
+        this.mYesView.setAlpha(0);
+        this.mNoView.setAlpha(0);
     }
 }

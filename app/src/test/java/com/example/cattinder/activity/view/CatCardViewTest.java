@@ -119,6 +119,44 @@ public class CatCardViewTest extends RobolectricTest {
     }
 
 
+    @Test
+    public void testSetCatResetsLikeAlpha() {
+
+        // Given
+        View likeView = this.mCatCardView.mYesView;
+        View dislikeView = this.mCatCardView.mNoView;
+
+        this.mCatCardView.setCat(this.mTestCat);
+        this.mCatCardView.likeCat(.5f);
+
+        // When
+        this.mCatCardView.setCat(this.mTestCat);
+
+        // Then
+        assertThat(likeView).hasAlpha(0f);
+        assertThat(dislikeView).hasAlpha(.0f);
+    }
+
+
+    @Test
+    public void testSetCatResetsDislikeAlpha() {
+
+        // Given
+        View likeView = this.mCatCardView.mYesView;
+        View dislikeView = this.mCatCardView.mNoView;
+
+        this.mCatCardView.setCat(this.mTestCat);
+        this.mCatCardView.dislikeCat(.5f);
+
+        // When
+        this.mCatCardView.setCat(this.mTestCat);
+
+        // Then
+        assertThat(likeView).hasAlpha(0f);
+        assertThat(dislikeView).hasAlpha(.0f);
+    }
+
+
     @Test(expected = IllegalArgumentException.class)
     public void testThrowsExceptionWhenLikePercentageOutOfRangeLow() {
 
