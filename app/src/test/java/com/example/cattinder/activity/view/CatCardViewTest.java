@@ -31,7 +31,6 @@ public class CatCardViewTest extends RobolectricTest {
         this.mTestCat = getTestCat();
         this.mPicasso = MockPicasso.create();
         this.mCatCardView = new CatCardView(getApplicationContext(), mPicasso);
-        mCatCardView.setCat(this.mTestCat);
     }
 
 
@@ -40,6 +39,7 @@ public class CatCardViewTest extends RobolectricTest {
     public void testViewReturnsProperCat() {
 
         // Given
+        mCatCardView.setCat(this.mTestCat);
 
         // When
         CatServiceResponse.Cat returnedCat = mCatCardView.getCat();
@@ -53,6 +53,7 @@ public class CatCardViewTest extends RobolectricTest {
     public void testCatNameGoesIntoTextView() {
 
         // Given
+        mCatCardView.setCat(this.mTestCat);
 
         // When
         TextView textView = mCatCardView.mCatName;
@@ -66,6 +67,7 @@ public class CatCardViewTest extends RobolectricTest {
     public void testCatUrlGoesIntoImageView() {
 
         // Given
+        mCatCardView.setCat(this.mTestCat);
 
         // When
 
@@ -161,6 +163,7 @@ public class CatCardViewTest extends RobolectricTest {
     public void testThrowsExceptionWhenLikePercentageOutOfRangeLow() {
 
         // Given
+        mCatCardView.setCat(this.mTestCat);
 
         // When
         this.mCatCardView.likeCat(-.1f);
@@ -171,6 +174,7 @@ public class CatCardViewTest extends RobolectricTest {
     public void testThrowsExceptionWhenLikePercentageOutOfRangeHigh() {
 
         // Given
+        mCatCardView.setCat(this.mTestCat);
 
         // When
         this.mCatCardView.likeCat(1.1f);
@@ -181,6 +185,7 @@ public class CatCardViewTest extends RobolectricTest {
     public void testThrowsExceptionWhenDiskikePercentageOutOfRangeLow() {
 
         // Given
+        mCatCardView.setCat(this.mTestCat);
 
         // When
         this.mCatCardView.dislikeCat(-.1f);
@@ -191,6 +196,7 @@ public class CatCardViewTest extends RobolectricTest {
     public void testThrowsExceptionWhenDisikePercentageOutOfRangeHigh() {
 
         // Given
+        mCatCardView.setCat(this.mTestCat);
 
         // When
         this.mCatCardView.dislikeCat(1.1f);
